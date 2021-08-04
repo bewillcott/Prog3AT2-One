@@ -25,9 +25,12 @@
 
 namespace Prog3AT2_One
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Windows;
     using System.Windows.Input;
+    using System.Xml.Serialization;
 
     using Microsoft.Win32;
 
@@ -42,14 +45,19 @@ namespace Prog3AT2_One
         private const string PLAYLIST_EXTN = @".pld";
 
         /// <summary>
+        /// The program's title.
+        /// </summary>
+        private const string PROGRAM_TITLE = @"Java3 AT2.1";
+
+        /// <summary>
         /// The audio file format currently supported.
         /// </summary>
         private const string SUPPORTED_FORMAT = @"*.mp3";
 
         /// <summary>
-        /// The program's title.
+        /// The default name for a new play list.
         /// </summary>
-        private static string PROGRAM_TITLE = @"Java3 AT2.1";
+        private static string DEFAULT_PLAYLIST_NAME = $"PlayList{PLAYLIST_EXTN}";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -57,19 +65,19 @@ namespace Prog3AT2_One
         public MainWindow()
         {
             InitializeComponent();
-            wdwMain.Title = PROGRAM_TITLE;
-            PlayListDirty = true;
+
+            // Setup default empty play list ...
+            PlayList = new();
+            PlayListName = DEFAULT_PLAYLIST_NAME;
+            PlayListIsNew = true;
+
+            UpdateProgramTitle();
         }
 
         /// <summary>
         /// Gets or sets the PlayList.
         /// </summary>
-        private LinkedList<string> PlayList { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full path name of the playlist file.
-        /// </summary>
-        private string PlayListName { get; set; }
+        private LinkedList<FileData> PlayList { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the PlayList needs to be saved.
@@ -77,248 +85,29 @@ namespace Prog3AT2_One
         private bool PlayListDirty { get; set; }
 
         /// <summary>
-        /// The Close_CanExecute.
+        /// Is the current Play List a New one?
+        /// <para/>
+        /// It is if it has not been loaded from, or saved to a file?
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="CanExecuteRoutedEventArgs"/>.</param>
-        private void Close_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = PlayListName != null;
-        }
+        private bool PlayListIsNew { get; set; }
 
         /// <summary>
-        /// The Close_Executed.
+        /// Gets or sets the full path name of the playlist file.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="ExecutedRoutedEventArgs"/>.</param>
-        private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (PlayListDirty)
-            {
-                if (MessageBox.Show(wdwMain, "You have modified your play list.\n" +
-                    "Do you want to save it?", "File closing.", MessageBoxButton.YesNo,
-                    MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
-                {
-                    SavePlayList();
-                }
-            }
-
-            PlayList = null;
-            PlayListName = null;
-            PlayListDirty = false;
-            wdwMain.Title = PROGRAM_TITLE;
-        }
+        private string PlayListName { get; set; }
 
         /// <summary>
-        /// The Exit_Click.
+        /// Add this file to the Play List.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="RoutedEventArgs"/>.</param>
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        /// <param name="openFileDialog">The object used to select the filename</param>
+        /// <returns>Newly created object</returns>
+        private FileData AddAudioFilename(OpenFileDialog openFileDialog)
         {
-            Close();
-        }
+            FileData fileData = new FileData(openFileDialog);
 
-        /// <summary>
-        /// The Open_CanExecute.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="CanExecuteRoutedEventArgs"/>.</param>
-        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+            PlayList.AddLast(fileData);
 
-        /// <summary>
-        /// The Open_Executed.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="ExecutedRoutedEventArgs"/>.</param>
-        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            string filter = $"Audio files ({SUPPORTED_FORMAT})|{SUPPORTED_FORMAT}|" +
-                            $"Play List files ({PLAYLIST_EXTN})|{PLAYLIST_EXTN}|" +
-                            @"All files (*.*)|*.*";
-
-            OpenFileDialog openFileDialog = new();
-
-            openFileDialog.CheckFileExists = true;
-            openFileDialog.CheckPathExists = true;
-            openFileDialog.Filter = filter;
-            openFileDialog.Title = @"Select file to Open";
-
-            if ((bool)openFileDialog.ShowDialog(wdwMain))
-            {
-                string filename = openFileDialog.SafeFileName;
-                int index = filename.LastIndexOf('.');
-                string extn = filename[index.];
-
-                switch (extn)
-                {
-                    case PLAYLIST_EXTN:
-                    {
-                        CheckResult result = CheckPlayListDirty(@"File opening.");
-
-                        switch (result)
-                        {
-                            case CheckResult.False:
-                            case CheckResult.True:
-                            {
-                                LoadPlayList(filename);
-                                break;
-                            }
-
-                            default:
-                            {
-                                break;
-                            }
-                        }
-
-                        break;
-                    }
-
-                    case SUPPORTED_FORMAT:
-                    {
-                        break;
-                    }
-                    default:
-                    {
-                        break;
-                    }
-                }
-
-                UpdateProgramTitle();
-            }
-        }
-
-        /// <summary>
-        /// The AddAudioFilename.
-        /// </summary>
-        /// <param name="filename">The filename<see cref="string"/>.</param>
-        private void AddAudioFilename(string filename)
-        {
-        }
-
-        /// <summary>
-        /// Update the MainWindow title based on current settings.
-        /// </summary>
-        private void UpdateProgramTitle()
-        {
-            wdwMain.Title = PlayListName +
-                (PlayListDirty ? "*" : "")
-                + @" | " + PROGRAM_TITLE;
-        }
-
-        /// <summary>
-        /// The SavePlayList.
-        /// </summary>
-        private void SavePlayList()
-        {
-            MessageBox.Show($"Save not yet implemented!\n{PlayListName}", @"SavePlayList");
-        }
-
-        /// <summary>
-        /// Load the play list from the file.
-        /// </summary>
-        /// <param name="filename">The play list file to load.</param>
-        private void LoadPlayList(string filename)
-        {
-            PlayListName = filename;
-            PlayList = new();
-            PlayListDirty = false;
-
-            MessageBox.Show($"Load not yet implemented!\n{filename}", @"LoadPlayList");
-        }
-
-        /// <summary>
-        /// The Save_CanExecute.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="CanExecuteRoutedEventArgs"/>.</param>
-        private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = PlayListDirty;
-        }
-
-        /// <summary>
-        /// The Save_Executed.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="ExecutedRoutedEventArgs"/>.</param>
-        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// The Window_Closing.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="System.ComponentModel.CancelEventArgs"/>.</param>
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            CheckResult result = CheckPlayListDirty(@"Program exiting.");
-
-            switch (result)
-            {
-                case CheckResult.False:
-                {
-                    if (MessageBox.Show(wdwMain, @"Are you sure?", @"Program exiting.", MessageBoxButton.YesNo,
-                               MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.No)
-                    {
-                        e.Cancel = true;
-                    }
-
-                    break;
-                }
-
-                case CheckResult.True:
-                {
-                    // Let it close.
-                    break;
-                }
-
-                case CheckResult.Cancel:
-                {
-                    e.Cancel = true;
-                    break;
-                }
-
-                default:
-                {
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Result returned from the CheckPlayListDirty method.
-        /// </summary>
-        private enum CheckResult
-        {
-            /// <summary>
-            /// PlayListDirty == false
-            /// </summary>
-            False,
-
-            /// <summary>
-            /// PlayListDirty == true
-            /// </summary>
-            True,
-
-            /// <summary>
-            /// PlayListDirty == true AND user selected [Cancel] button
-            /// </summary>
-            Cancel
-        }
-
-        /// <summary>
-        /// The New_CanExecute.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="CanExecuteRoutedEventArgs"/>.</param>
-        private void New_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
+            return fileData;
         }
 
         /// <summary>
@@ -364,41 +153,276 @@ namespace Prog3AT2_One
         }
 
         /// <summary>
-        /// The New_Executed.
+        /// The Close_CanExecute.
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/>.</param>
-        /// <param name="e">The e<see cref="ExecutedRoutedEventArgs"/>.</param>
-        private void New_Executed(object sender, ExecutedRoutedEventArgs e)
+        /// <param name="e">The e <see cref="CanExecuteRoutedEventArgs"/>.</param>
+        private void Close_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
+            e.CanExecute = false;
         }
 
         /// <summary>
-        /// Defines the <see cref="AudioFile" />.
+        /// The Close_Executed.
         /// </summary>
-        private class AudioFile
+        /// <param name="sender">The sender<see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="ExecutedRoutedEventArgs"/>.</param>
+        private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="AudioFile"/> class.
-            /// </summary>
-            /// <param name="safeFileName">The safeFileName<see cref="string"/>.</param>
-            /// <param name="fileName">The fileName<see cref="string"/>.</param>
-            public AudioFile(string safeFileName, string fileName)
+            CheckPlayListDirty(@"File closing...");
+
+            PlayList = null;
+            PlayListName = null;
+            PlayListDirty = false;
+
+            UpdateProgramTitle();
+        }
+
+        /// <summary>
+        /// The Exit_Click.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="RoutedEventArgs"/>.</param>
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        /// <summary>
+        /// Load the play list from the file.
+        /// </summary>
+        /// <param name="filename">The play list file to load.</param>
+        private void LoadPlayList(string filename)
+        {
+            PlayListName = filename;
+            PlayListDirty = false;
+
+            XmlSerializer mySerializer = new XmlSerializer(typeof(LinkedList<FileData>));
+            TextReader myReader = new StreamReader(PlayListName);
+            PlayList = (LinkedList<FileData>)mySerializer.Deserialize(myReader);
+            myReader.Close();
+
+            UpdateProgramTitle();
+
+            MessageBox.Show($"Load not yet implemented!\n{filename}", @"LoadPlayList");
+        }
+
+        /// <summary>
+        /// The New_CanExecute.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="CanExecuteRoutedEventArgs"/>.</param>
+        private void New_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// The New_Executed.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="ExecutedRoutedEventArgs"/>.</param>
+        private void New_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CheckResult result = CheckPlayListDirty(@"New Play List...");
+
+            if (result != CheckResult.Cancel)
             {
-                FileName = safeFileName;
-                FullPathName = fileName;
+                // Setup default empty play list ...
+                PlayList = new();
+                PlayListName = DEFAULT_PLAYLIST_NAME;
+                PlayListDirty = false;
+                PlayListIsNew = true;
+
+                UpdateProgramTitle();
+            }
+        }
+
+        /// <summary>
+        /// The Open_CanExecute.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="CanExecuteRoutedEventArgs"/>.</param>
+        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        /// <summary>
+        /// The Open_Executed.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="ExecutedRoutedEventArgs"/>.</param>
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string filter = $"Audio files ({SUPPORTED_FORMAT})|{SUPPORTED_FORMAT}|" +
+                            $"Play List files ({PLAYLIST_EXTN})|{PLAYLIST_EXTN}|" +
+                            @"All files (*.*)|*.*";
+
+            OpenFileDialog openFileDialog = new();
+
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+            openFileDialog.Filter = filter;
+            openFileDialog.Title = @"Select file to Open";
+
+            if ((bool)openFileDialog.ShowDialog(wdwMain))
+            {
+                string filename = openFileDialog.SafeFileName;
+                int index = filename.LastIndexOf('.');
+                string extn = filename[index..];
+
+                switch (extn)
+                {
+                    case PLAYLIST_EXTN:
+                    {
+                        CheckResult result = CheckPlayListDirty(@"File opening...");
+
+                        if (result != CheckResult.Cancel)
+                        {
+                            LoadPlayList(filename);
+                        }
+
+                        break;
+                    }
+
+                    case SUPPORTED_FORMAT:
+                    {
+                        AddAudioFilename(openFileDialog);
+                        OpenAudioFile(openFileDialog.FileName);
+                        break;
+                    }
+
+                    default:
+                    {
+                        // Unsupported file type
+                        break;
+                    }
+                }
+
+                UpdateProgramTitle();
+            }
+        }
+
+        /// <summary>
+        /// Open the audio file.
+        /// </summary>
+        /// <param name="fileName">the full path name of the audio file</param>
+        private void OpenAudioFile(string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The Save_CanExecute.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="CanExecuteRoutedEventArgs"/>.</param>
+        private void Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = PlayListDirty;
+        }
+
+        /// <summary>
+        /// The Save_Executed.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="ExecutedRoutedEventArgs"/>.</param>
+        private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SavePlayList();
+        }
+
+        /// <summary>
+        /// The SavePlayList.
+        /// </summary>
+        private void SavePlayList()
+        {
+            if (PlayListIsNew)
+            {
+                string filter = $"Play List files ({PLAYLIST_EXTN})|{PLAYLIST_EXTN}|" +
+                @"All files (*.*)|*.*";
+
+                SaveFileDialog saveFileDialog = new();
+
+                saveFileDialog.CheckPathExists = true;
+                saveFileDialog.Filter = filter;
+                saveFileDialog.FileName = PlayListName;
+                saveFileDialog.DefaultExt = PLAYLIST_EXTN;
+                saveFileDialog.Title = @"Select file to Save to";
+
+                if ((bool)saveFileDialog.ShowDialog(wdwMain))
+                {
+                    PlayListName = saveFileDialog.FileName;
+                }
+                else
+                {
+                    // User canceled action
+                    return;
+                }
             }
 
-            /// <summary>
-            /// Gets the FileName
-            /// This is just the file name with extension.
-            /// </summary>
-            public string FileName { get; private set; }
+            // Store records in XML file
+            XmlSerializer mySerializer = new XmlSerializer(typeof(LinkedList<FileData>));
+            TextWriter myWriter = new StreamWriter(PlayListName);
+            mySerializer.Serialize(myWriter, PlayList);
+            myWriter.Close();
 
-            /// <summary>
-            /// Gets the FullPathName
-            /// This is the full path to and including the file name and extension.
-            /// </summary>
-            public string FullPathName { get; private set; }
+            PlayListDirty = false;
+            PlayListIsNew = false;
+
+            UpdateProgramTitle();
+        }
+
+        /// <summary>
+        /// Update the MainWindow title based on current settings.
+        /// </summary>
+        private void UpdateProgramTitle()
+        {
+            wdwMain.Title = PlayListName +
+                (PlayListDirty ? "*" : "")
+                + @" | " + PROGRAM_TITLE;
+        }
+
+        /// <summary>
+        /// The Window_Closing.
+        /// </summary>
+        /// <param name="sender">The sender <see cref="object"/>.</param>
+        /// <param name="e">The e <see cref="System.ComponentModel.CancelEventArgs"/>.</param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            CheckResult result = CheckPlayListDirty(@"Program exiting.");
+
+            switch (result)
+            {
+                case CheckResult.False:
+                {
+                    if (MessageBox.Show(wdwMain, @"Are you sure?", @"Program exiting.", MessageBoxButton.YesNo,
+                               MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.No)
+                    {
+                        e.Cancel = true;
+                    }
+
+                    break;
+                }
+
+                case CheckResult.True:
+                {
+                    // Let it close.
+                    break;
+                }
+
+                case CheckResult.Cancel:
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
         }
     }
 }
