@@ -5,5 +5,11 @@
              StartupUri="MainWindow.xaml" SessionEnding="Application_SessionEnding"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
+        <Style x:Key="ColouredGrid" TargetType="Grid">
+            <Setter Property="Background" Value="OldLace" />
+        </Style>
+        <Style TargetType="ListView">
+            <Setter Property="Background" Value="OldLace" />
+        </Style>
     </Application.Resources>
 </Application>

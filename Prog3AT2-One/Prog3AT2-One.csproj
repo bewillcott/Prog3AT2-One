@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<RootNamespace>Prog3AT2_One</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<StartupObject>Prog3AT2_One.App</StartupObject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="Images\Autoplay-Off-disabled.png" />
+		<Resource Include="Images\Autoplay-Off-down.png" />
+		<Resource Include="Images\Autoplay-Off-mouseover.png" />
+		<Resource Include="Images\Autoplay-Off.png" />
+		<Resource Include="Images\Autoplay-On-down.png" />
+		<Resource Include="Images\Autoplay-On-mouseover.png" />
+		<Resource Include="Images\Autoplay-On.png" />
+		<Resource Include="Images\Controls-First-disabled.png" />
+		<Resource Include="Images\Controls-First-down.png" />
+		<Resource Include="Images\Controls-First-mouseover.png" />
+		<Resource Include="Images\Controls-First.png" />
+		<Resource Include="Images\Controls-Last-disabled.png" />
+		<Resource Include="Images\Controls-Last-down.png" />
+		<Resource Include="Images\Controls-Last-mouseover.png" />
+		<Resource Include="Images\Controls-Last.png" />
+		<Resource Include="Images\Controls-Next-disabled.png" />
+		<Resource Include="Images\Controls-Next-down.png" />
+		<Resource Include="Images\Controls-Next-mouseover.png" />
+		<Resource Include="Images\Controls-Next.png" />
+		<Resource Include="Images\Controls-Pause-disabled.png" />
+		<Resource Include="Images\Controls-Pause-down.png" />
+		<Resource Include="Images\Controls-Pause-mouseover.png" />
+		<Resource Include="Images\Controls-Pause.png" />
+		<Resource Include="Images\Controls-Play-disabled.png" />
+		<Resource Include="Images\Controls-Play-down.png" />
+		<Resource Include="Images\Controls-Play-mouseover.png" />
+		<Resource Include="Images\Controls-Play.png" />
+		<Resource Include="Images\Controls-Previous-disabled.png" />
+		<Resource Include="Images\Controls-Previous-down.png" />
+		<Resource Include="Images\Controls-Previous-mouseover.png" />
+		<Resource Include="Images\Controls-Previous.png" />
+		<Resource Include="Images\Controls-Stop-disabled.png" />
+		<Resource Include="Images\Controls-Stop-down.png" />
+		<Resource Include="Images\Controls-Stop-mouseover.png" />
+		<Resource Include="Images\Controls-Stop.png" />
+		<Resource Include="Images\Down-Arrow-disabled.png" />
+		<Resource Include="Images\Down-Arrow-down.png" />
+		<Resource Include="Images\Down-Arrow-mouseover.png" />
+		<Resource Include="Images\Down-Arrow.png" />
+		<Resource Include="Images\Edit-disabled.png" />
+		<Resource Include="Images\Edit-down.png" />
+		<Resource Include="Images\Edit-mouseover.png" />
+		<Resource Include="Images\Edit.png" />
+		<Resource Include="Images\Play-List-Once-disabled.png" />
+		<Resource Include="Images\Play-List-Once-down.png" />
+		<Resource Include="Images\Play-List-Once-mouseover.png" />
+		<Resource Include="Images\Play-List-Once.png" />
+		<Resource Include="Images\Recycle-disabled.png" />
+		<Resource Include="Images\Recycle-down.png" />
+		<Resource Include="Images\Recycle-mouseover.png" />
+		<Resource Include="Images\Recycle.png" />
+		<Resource Include="Images\Repeat-disabled.png" />
+		<Resource Include="Images\Repeat-down.png" />
+		<Resource Include="Images\Repeat-mouseover.png" />
+		<Resource Include="Images\Repeat.png" />
+		<Resource Include="Images\Up-Arrow-disabled.png" />
+		<Resource Include="Images\Up-Arrow-down.png" />
+		<Resource Include="Images\Up-Arrow-mouseover.png" />
+		<Resource Include="Images\Up-Arrow.png" />
+	</ItemGroup>
+</Project>

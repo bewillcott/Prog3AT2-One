@@ -1,5 +1,5 @@
 ﻿/*
- *  File Name:   MainWindow.CheckResult.cs
+ *  File Name:   AboutDialog.xaml.cs
  *
  *  Copyright (c) 2021 Bradley Willcott
  *
@@ -19,33 +19,25 @@
  * ****************************************************************
  * Name: Bradley Willcott
  * ID:   M198449
- * Date: 4/08/2021
+ * Date: 12/08/2021
  * ****************************************************************
  */
 
 namespace Prog3AT2_One
 {
-    public partial class MainWindow
+    using System.Windows;
+
+    /// <summary>
+    /// Interaction logic for AboutDialog.xaml.
+    /// </summary>
+    public partial class AboutDialog : Window
     {
         /// <summary>
-        /// Result returned from the CheckPlayListDirty method.
+        /// Initializes a new instance of the <see cref="AboutDialog"/> class.
         /// </summary>
-        public enum CheckResult
+        public AboutDialog()
         {
-            /// <summary>
-            /// PlayListDirty == false
-            /// </summary>
-            False,
-
-            /// <summary>
-            /// PlayListDirty == true
-            /// </summary>
-            True,
-
-            /// <summary>
-            /// PlayListDirty == true AND user selected [Cancel] button
-            /// </summary>
-            Cancel
+            InitializeComponent();
         }
     }
 }

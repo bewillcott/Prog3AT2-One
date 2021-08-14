@@ -1,0 +1,193 @@
+﻿<!--
+/*
+ *  File Name:   MainWindow.xaml
+ *
+ *  Copyright (c) 2021 Bradley Willcott
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses />.
+ *
+ * ****************************************************************
+ * Name: Bradley Willcott
+ * ID:   M198449
+ * Date: 4/08/2021
+ * ****************************************************************
+ */
+-->
+
+<Window x:Name="wdwMain" x:Class="Prog3AT2_One.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Prog3AT2_One"
+        mc:Ignorable="d"
+        Title="Prog3 AT2.1" Height="500" Width="600" MinHeight="500" MinWidth="600"
+        WindowStartupLocation="CenterScreen" Closing="Window_Closing" Background="OldLace">
+    <Window.Resources>
+        <Style TargetType="Image">
+            <Setter Property="Margin" Value="3,3" />
+            <Setter Property="Width" Value="20" />
+        </Style>
+        <Style TargetType="Menu">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <!-- Menu Commands -->
+        <CommandBinding Command="ApplicationCommands.New" CanExecute="New_CanExecute" Executed="New_Executed" />
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed" />
+        <CommandBinding Command="ApplicationCommands.Save" CanExecute="Save_CanExecute" Executed="Save_Executed" />
+        <CommandBinding Command="ApplicationCommands.Close" CanExecute="Close_CanExecute" Executed="Close_Execute" />
+    </Window.CommandBindings>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Main Menu -->
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="New" />
+                <MenuItem Header="_Open" Command="Open">
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_Save" Command="Save" />
+                <Separator />
+                <MenuItem Header="E_xit" Command="Close" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="Help_Click" />
+            </MenuItem>
+        </Menu>
+
+        <DockPanel Grid.Row="1">
+            <!-- Toolbar: Player control buttons -->
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <Image Tag="Controls-First" IsEnabled="{Binding PlayListHasMultipleItems}"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="First audio file"
+                           Source="/Prog3AT2-One;component/Images/Controls-First.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                    <Image Tag="Controls-Previous" IsEnabled="{Binding PreviousIsEnabled}"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="Previous audio file"
+                           Source="/Prog3AT2-One;component/Images/Controls-Previous.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                    <Image Tag="Controls-Play" IsEnabled="{Binding PlayIsEnabled}" Name="imgPlay"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="Play audio"
+                           Source="/Prog3AT2-One;component/Images/Controls-Play.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                    <Image Tag="Controls-Stop" IsEnabled="{Binding StopIsEnabled}" Name="imgStop"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="Stop audio"
+                           Source="/Prog3AT2-One;component/Images/Controls-Stop.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                    <Image Tag="Controls-Next" IsEnabled="{Binding NextIsEnabled}" Name="imgNext"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="Next audio file"
+                           Source="/Prog3AT2-One;component/Images/Controls-Next.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                    <Image Tag="Controls-Last" IsEnabled="{Binding PlayListHasMultipleItems}"
+                           IsEnabledChanged="Image_IsEnabledChanged" ToolTip="Last audio file"
+                           Source="/Prog3AT2-One;component/Images/Controls-Last.png"
+                           MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                           MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                </ToolBar>
+
+                <!-- ToolBar: Media Position controls -->
+                <ToolBar  Width="225">
+                    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
+                        <Label Name="lblPosition" DockPanel.Dock="Left" Content="00:00" HorizontalAlignment="Center" />
+                        <Label Name="lblTotal"  DockPanel.Dock="Right"  Content="00:00" HorizontalAlignment="Center" />
+                        <Grid VerticalAlignment="Center">
+                            <Slider Name="slPosition" Minimum="0" Maximum="100" SmallChange="1" LargeChange="10" Interval="1"
+                                    Thumb.DragStarted="SlPosition_DragStarted"  Thumb.DragCompleted="SlPosition_DragCompleted"
+                                    ValueChanged="SlPosition_ValueChanged" IsEnabled="{Binding SliderIsEnabled}" />
+                        </Grid>
+                    </DockPanel>
+                </ToolBar>
+            </ToolBarTray>
+
+            <Grid Margin="10,0,10,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Add image of CD and name of playing file -->
+                <TextBlock Name="tbPlaying" FontSize="16" Margin="10" TextWrapping="Wrap" Text="Nothing Playing"
+                           Background="Transparent" />
+
+                <!-- Add Display panel on right for the Play List -->
+                <DockPanel Grid.Column="1">
+                    <ToolBarTray DockPanel.Dock="Top">
+                        <ToolBar Header="Playlist" FontSize="14">
+                            <Image Tag="Autoplay-Off" IsEnabled="{Binding AutoplayIsEnabled}"
+                                   ToolTip="Autoplay on/off" Name="imgAutoplay"
+                                   IsEnabledChanged="Image_IsEnabledChanged" Margin="10,3,3,3"
+                                   Source="/Prog3AT2-One;component/Images/Autoplay-Off.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                            <Image Tag="Play-List-Once" IsEnabled="{Binding RepeatIsEnabled}"
+                                   ToolTip="Play list Once/Continuous Repeat" Name="imgRepeat"
+                                   IsEnabledChanged="Image_IsEnabledChanged"
+                                   Source="/Prog3AT2-One;component/Images/Play-List-Once.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                            <Separator />
+                            <Image Tag="Edit" IsEnabled="{Binding ListItemSelected}"
+                                   ToolTip="Edit item's details" Name="imgEdit"
+                                   IsEnabledChanged="Image_IsEnabledChanged"
+                                   Source="/Prog3AT2-One;component/Images/Edit.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                            <Image Tag="Down-Arrow" IsEnabled="{Binding MoveDownIsEnabled}"
+                                   ToolTip="Move item down in list" Name="imgMoveDown"
+                                   IsEnabledChanged="Image_IsEnabledChanged"
+                                   Source="/Prog3AT2-One;component/Images/Down-Arrow.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                            <Image Tag="Up-Arrow" IsEnabled="{Binding MoveUpIsEnabled}"
+                                   ToolTip="Move item up in list" Name="imgMoveUp"
+                                   IsEnabledChanged="Image_IsEnabledChanged"
+                                   Source="/Prog3AT2-One;component/Images/Up-Arrow.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                            <Image Tag="Recycle" IsEnabled="{Binding ListItemSelected}"
+                                   ToolTip="Remove item from list" Name="imgRecycle"
+                                   IsEnabledChanged="Image_IsEnabledChanged"
+                                   Source="/Prog3AT2-One;component/Images/Recycle.png"
+                                   MouseDown="ToolBarImage_MouseDown" MouseUp="ToolBarImage_MouseUp"
+                                   MouseEnter="ToolBarImage_MouseEnter" MouseLeave="ToolBarImage_MouseLeave" />
+                        </ToolBar>
+                    </ToolBarTray>
+                    <ListView Name="lvPlayList"  BorderBrush="Black" BorderThickness="1"
+                          SelectionChanged="PlayList_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" MouseDoubleClick="PlayList_DoubleClick"
+                              ToolTip="Click to select/Double-Click to edit">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
