@@ -27,8 +27,6 @@ namespace Prog3AT2_One
 {
     using System;
     using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -49,7 +47,6 @@ namespace Prog3AT2_One
         {
             InitializeComponent();
             DataContext = this;
-            ListView lv;
 
             // Initialize mediaplayer
             TheMediaPlayer = new();
@@ -100,7 +97,7 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
         private void Image_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Image image = sender as Image;
+            var image = sender as Image;
 
             switch (image.Tag as string)
             {
@@ -389,6 +386,7 @@ namespace Prog3AT2_One
         /// <param name="e">The e<see cref="EventArgs"/>.</param>
         private void MediaPlayer_MediaOpened(object sender, EventArgs e)
         {
+            // Method intentionally left empty.
         }
 
         /// <summary>
@@ -408,7 +406,7 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.</param>
         private void New_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CheckResult result = CheckPlayListDirty(@"New Play List...");
+            var result = CheckPlayListDirty(@"New Play List...");
 
             if (result != CheckResult.Cancel)
             {
@@ -444,15 +442,15 @@ namespace Prog3AT2_One
 
             if ((bool)openFileDialog.ShowDialog(wdwMain))
             {
-                string filename = openFileDialog.FileName;
-                int index = filename.LastIndexOf('.');
-                string extn = filename[index..];
+                var filename = openFileDialog.FileName;
+                var index = filename.LastIndexOf('.');
+                var extn = filename[index..];
 
                 switch (extn)
                 {
                     case PLAYLIST_EXTN:
                     {
-                        CheckResult result = CheckPlayListDirty(@"File opening...");
+                        var result = CheckPlayListDirty(@"File opening...");
 
                         if (result != CheckResult.Cancel)
                         {
@@ -503,10 +501,10 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
         private void PlayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView listView = sender as ListView;
-            int index = listView.SelectedIndex;
-            int count = listView.Items.Count;
-            FileData fileData = listView.SelectedItem as FileData;
+            var listView = sender as ListView;
+            var index = listView.SelectedIndex;
+            var count = listView.Items.Count;
+            var fileData = listView.SelectedItem as FileData;
 
             ListItemSelected = index > -1;
             MoveUpIsEnabled = index > 0;
@@ -588,7 +586,7 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
         private void ToolBarImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Image image = sender as Image;
+            var image = sender as Image;
             image.Source = GetImage($"{image.Tag as string}{DOWN}.png");
         }
 
@@ -599,7 +597,7 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         private void ToolBarImage_MouseEnter(object sender, MouseEventArgs e)
         {
-            Image image = sender as Image;
+            var image = sender as Image;
             image.Source = GetImage($"{image.Tag as string}{MOUSEOVER}.png");
         }
 
@@ -610,9 +608,9 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         private void ToolBarImage_MouseLeave(object sender, MouseEventArgs e)
         {
-            Image image = sender as Image;
-            string tag = image.Tag as string;
-            bool disabled = false;
+            var image = sender as Image;
+            var tag = image.Tag as string;
+            var disabled = false;
 
             switch (tag)
             {
@@ -660,40 +658,7 @@ namespace Prog3AT2_One
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //CheckResult result = CheckPlayListDirty(@"Program exiting.");
             e.Cancel = CheckPlayListDirty(@"Program exiting.") == CheckResult.Cancel;
-
-            //switch (result)
-            //{
-            //    case CheckResult.False:
-            //    {
-            //        // TODO Reactivate this for production
-            //        //if (MessageBox.Show(wdwMain, @"Are you sure?", @"Program exiting.", MessageBoxButton.YesNo,
-            //        //           MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.No)
-            //        //{
-            //        //    e.Cancel = true;
-            //        //}
-
-            //        break;
-            //    }
-
-            //    case CheckResult.True:
-            //    {
-            //        // Let it close.
-            //        break;
-            //    }
-
-            //    case CheckResult.Cancel:
-            //    {
-            //        e.Cancel = true;
-            //        break;
-            //    }
-
-            //    default:
-            //    {
-            //        break;
-            //    }
-            //}
         }
     }
 }

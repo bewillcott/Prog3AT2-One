@@ -31,8 +31,6 @@ namespace Prog3AT2_One.Classes
     using System.IO;
     using System.Runtime.CompilerServices;
 
-    using Microsoft.Win32;
-
     /// <summary>
     /// Defines the <see cref="FileData" />.
     /// </summary>

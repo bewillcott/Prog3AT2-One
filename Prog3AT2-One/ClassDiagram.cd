@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Prog3AT2_One.App">
+    <Position X="3.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Prog3AT2_One.Classes.FileData" BaseTypeListCollapsed="true">
+    <Position X="12" Y="13.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACIACAEQEoBCAAgAAgIAEAIAAIAAAAABAByA=</HashCode>
+      <FileName>Classes\FileData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.493" />
+  </Class>
+  <Class Name="Prog3AT2_One.Classes.ObservableLinkedList&lt;T&gt;" BaseTypeListCollapsed="true">
+    <Position X="12" Y="22" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AEKIAFAAAIAAAAARCAAApCAwAAQQABAACIAAAABQAAA=</HashCode>
+      <FileName>Classes\ObservableLinkedList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Prog3AT2_One.AboutDialog">
+    <Position X="3.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AboutDialog.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Right" Position="0.236" />
+  </Class>
+  <Class Name="Prog3AT2_One.FileDataDialog">
+    <Position X="12" Y="10.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgIBCAACAAAAAAAAAAAAAIAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>FileDataDialog.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="fileData" />
+    </ShowAsAssociation>
+    <Lollipop Position="1.232" />
+  </Class>
+  <Class Name="Prog3AT2_One.MainWindow">
+    <Position X="7.25" Y="10.75" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Prog3AT2_One.MainWindow.CheckResult">
+        <TypeIdentifier>
+          <NewMemberFileName>MainWindow.CheckResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>xByICAi0E8kHDApWMVF8iBERiwKKgEzeDhYD08BCI0o=</HashCode>
+      <FileName>MainWindow.CheckResult.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="timer" />
+      <Property Name="TheMediaPlayer" />
+      <Property Name="PlayList" />
+    </ShowAsAssociation>
+    <Lollipop Position="2.093" />
+  </Class>
+  <Class Name="System.Windows.Media.MediaPlayer" Collapsed="true">
+    <Position X="4.25" Y="14.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Windows.Threading.DispatcherTimer" Collapsed="true">
+    <Position X="4.25" Y="13.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Collections.Generic.LinkedList&lt;T&gt;" Collapsed="true">
+    <Position X="13.25" Y="20.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Windows.Window" Collapsed="true">
+    <Position X="8.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Windows.Application" Collapsed="true">
+    <Position X="3.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -5,7 +5,7 @@
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<RootNamespace>Prog3AT2_One</RootNamespace>
 		<UseWPF>true</UseWPF>
-		<StartupObject>Prog3AT2_One.App</StartupObject>
+		<StartupObject></StartupObject>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -68,5 +68,10 @@
 		<Resource Include="Images\Up-Arrow-down.png" />
 		<Resource Include="Images\Up-Arrow-mouseover.png" />
 		<Resource Include="Images\Up-Arrow.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="obj\Debug\" />
+		<Folder Include="obj\Release\" />
 	</ItemGroup>
 </Project>

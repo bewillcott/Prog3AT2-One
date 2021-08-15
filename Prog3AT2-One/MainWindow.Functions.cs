@@ -66,7 +66,7 @@ namespace Prog3AT2_One
         /// <returns>.</returns>
         private static ImageSource GetImage(string name)
         {
-            StreamResourceInfo sri = Application.GetResourceStream(new Uri($"/Prog3AT2-One;component/Images/{name}", UriKind.Relative));
+            var sri = Application.GetResourceStream(new Uri($"/Prog3AT2-One;component/Images/{name}", UriKind.Relative));
             BitmapImage bmp = new();
             bmp.BeginInit();
             bmp.StreamSource = sri.Stream;
@@ -110,13 +110,13 @@ namespace Prog3AT2_One
         /// <returns>.</returns>
         private CheckResult CheckPlayListDirty(string title)
         {
-            CheckResult rtn = CheckResult.False;
+            var rtn = CheckResult.False;
 
             if (PlayListIsDirty)
             {
                 rtn = CheckResult.True;
 
-                MessageBoxResult result = MessageBox.Show(wdwMain, "You have modified your play list.\n" +
+                var result = MessageBox.Show(wdwMain, "You have modified your play list.\n" +
                     "Do you want to save it?", title, MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question, MessageBoxResult.Yes);
 
@@ -235,7 +235,7 @@ namespace Prog3AT2_One
         /// <returns></returns>
         private CheckResult SavePlayList()
         {
-            CheckResult rtn = CheckResult.False;
+            var rtn = CheckResult.False;
 
             if (PlayListIsNew)
             {
@@ -389,7 +389,7 @@ namespace Prog3AT2_One
                     // Select and load previous audio file
                     image.Source = GetImage($"{image.Tag as string}{(mouseover ? MOUSEOVER : "")}.png");
 
-                    int prevIndex = lvPlayList.Items.Count - 1;
+                    var prevIndex = lvPlayList.Items.Count - 1;
 
                     if ((lvPlayList.SelectedIndex > 0) && (lvPlayList.SelectedIndex < lvPlayList.Items.Count))
                     {
@@ -423,7 +423,7 @@ namespace Prog3AT2_One
                         ToolBarImageClick(imgAutoplay, false);
                     }
 
-                    FileData fileData = PlayList[lvPlayList.SelectedIndex];
+                    var fileData = PlayList[lvPlayList.SelectedIndex];
                     FileDataDialog fileDataDialog = new(fileData);
 
                     if (fileDataDialog.ShowDialog() == true)
@@ -449,11 +449,11 @@ namespace Prog3AT2_One
                     if (index >= 0 && index < PlayList.Count - 1)
                     {
                         // Get the node to move
-                        LinkedListNode<FileData> node1 = PlayList.GetNodeAt(index);
+                        var node1 = PlayList.GetNodeAt(index);
                         PlayList.RemoveAt(index);
 
                         // Get the node we want to move below
-                        LinkedListNode<FileData> node2 = PlayList.GetNodeAt(index);
+                        var node2 = PlayList.GetNodeAt(index);
                         PlayList.AddAfter(node2, node1);
 
                         lvPlayList.SelectedItem = node1.Value;
@@ -472,16 +472,16 @@ namespace Prog3AT2_One
                         ToolBarImageClick(imgAutoplay, false);
                     }
 
-                    int index = lvPlayList.SelectedIndex;
+                    var index = lvPlayList.SelectedIndex;
 
                     if (index > 0)
                     {
                         // Get the node to move
-                        LinkedListNode<FileData> node1 = PlayList.GetNodeAt(index);
+                        var node1 = PlayList.GetNodeAt(index);
                         PlayList.RemoveAt(index);
 
                         // Get the node we want to move above
-                        LinkedListNode<FileData> node2 = PlayList.GetNodeAt(index - 1);
+                        var node2 = PlayList.GetNodeAt(index - 1);
                         PlayList.AddBefore(node2, node1);
 
                         lvPlayList.SelectedItem = node1.Value;
@@ -520,7 +520,7 @@ namespace Prog3AT2_One
                         MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                     {
                         TheMediaPlayer.Close();
-                        int index = lvPlayList.SelectedIndex;
+                        var index = lvPlayList.SelectedIndex;
 
                         PlayList.RemoveAt(index);
 
