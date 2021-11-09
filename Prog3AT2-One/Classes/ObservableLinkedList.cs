@@ -148,6 +148,27 @@ namespace Prog3AT2_One.Classes
         }
 
         /// <summary>
+        /// Adds an item to the <see cref="IList" />.
+        /// </summary>
+        /// <param name="value">The <see cref="object"/> to add to the <see cref="IList" />.</param>
+        /// <returns>
+        /// The position into which the new element was inserted, or -1 to indicate that the item was not
+        /// inserted into the collection.
+        /// </returns>
+        /// <exception cref="NotImplementedException"></exception>
+        int IList.Add(object value)
+        {
+            var rtn = -1;
+
+            if (value is T item)
+            {
+                rtn = (AddLast(item) != null) ? Count - 1 : -1;
+            }
+
+            return rtn;
+        }
+
+        /// <summary>
         /// Adds a new node containing the specified value after the specified existing node in the
         /// <see cref="LinkedList{T}" />.
         /// </summary>
@@ -261,6 +282,33 @@ namespace Prog3AT2_One.Classes
         }
 
         /// <summary>
+        ///Removes all items from the <see cref="IList" />.
+        /// </summary>
+        void IList.Clear()
+        {
+            Clear();
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="IList"/> contains a specific <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The object to locate in the <see cref="IList"/>.</param>
+        /// <returns>
+        /// true if the <see cref="object"/> is found in the <see cref="IList"/> otherwise, false.
+        /// </returns>
+        bool IList.Contains(object value)
+        {
+            var rtn = false;
+
+            if (value is T item)
+            {
+                rtn = IndexOf(item) > -1;
+            }
+
+            return rtn;
+        }
+
+        /// <summary>
         /// Gets the node at the specified <paramref name="index"/>.
         /// </summary>
         /// <param name="index">.</param>
@@ -337,6 +385,23 @@ namespace Prog3AT2_One.Classes
         }
 
         /// <summary>
+        /// Determines the index of a specific item in the <see cref="IList"/>.
+        /// </summary>
+        /// <param name="value">The object to locate in the <see cref="IList"/>.</param>
+        /// <returns>The index of value if found in the list; otherwise, -1.</returns>
+        int IList.IndexOf(object value)
+        {
+            var rtn = -1;
+
+            if (value is T item)
+            {
+                rtn = IndexOf(item);
+            }
+
+            return rtn;
+        }
+
+        /// <summary>
         /// Inserts an item to the <see cref="IList{T}" /> at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which <paramref name="item" /> should be inserted.</param>
@@ -398,7 +463,12 @@ namespace Prog3AT2_One.Classes
         {
             var index = IndexOf(item);
             var rtn = base.Remove(item);
-            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+
+            if (rtn)
+            {
+                OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+            }
+
             return rtn;
         }
 
@@ -409,6 +479,18 @@ namespace Prog3AT2_One.Classes
         public new void Remove(LinkedListNode<T> node)
         {
             base.Remove(node);
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a specific object from the <see cref="IList"/>.
+        /// </summary>
+        /// <param name="value">The object to remove from the <see cref="IList"/>.</param>
+        void IList.Remove(object value)
+        {
+            if (value is T item)
+            {
+                Remove(item);
+            }
         }
 
         /// <summary>
@@ -472,71 +554,6 @@ namespace Prog3AT2_One.Classes
         }
 
         /// <summary>
-        /// Adds an item to the <see cref="IList" />.
-        /// </summary>
-        /// <param name="value">The <see cref="object"/> to add to the <see cref="IList" />.</param>
-        /// <returns>
-        /// The position into which the new element was inserted, or -1 to indicate that the item was not
-        /// inserted into the collection.
-        /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        int IList.Add(object value)
-        {
-            var rtn = -1;
-
-            if (value is T item)
-            {
-                rtn = (AddLast(item) != null) ? Count - 1 : -1;
-            }
-
-            return rtn;
-        }
-
-        /// <summary>
-        ///Removes all items from the <see cref="IList" />.
-        /// </summary>
-        void IList.Clear()
-        {
-            Clear();
-        }
-
-        /// <summary>
-        /// Determines whether the <see cref="IList"/> contains a specific <paramref name="value"/>.
-        /// </summary>
-        /// <param name="value">The object to locate in the <see cref="IList"/>.</param>
-        /// <returns>
-        /// true if the <see cref="object"/> is found in the <see cref="IList"/> otherwise, false.
-        /// </returns>
-        bool IList.Contains(object value)
-        {
-            var rtn = false;
-
-            if (value is T item)
-            {
-                rtn = IndexOf(item) > -1;
-            }
-
-            return rtn;
-        }
-
-        /// <summary>
-        /// Determines the index of a specific item in the <see cref="IList"/>.
-        /// </summary>
-        /// <param name="value">The object to locate in the <see cref="IList"/>.</param>
-        /// <returns>The index of value if found in the list; otherwise, -1.</returns>
-        int IList.IndexOf(object value)
-        {
-            var rtn = -1;
-
-            if (value is T item)
-            {
-                rtn = IndexOf(item);
-            }
-
-            return rtn;
-        }
-
-        /// <summary>
         /// Called when [collection changed].
         /// </summary>
         /// <param name="action">The action.</param>
@@ -566,17 +583,5 @@ namespace Prog3AT2_One.Classes
         /// <param name="args">The args<see cref="NotifyCollectionChangedEventArgs"/>.</param>
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs args) =>
             CollectionChanged?.Invoke(this, args);
-
-        /// <summary>
-        /// Removes the first occurrence of a specific object from the <see cref="IList"/>.
-        /// </summary>
-        /// <param name="value">The object to remove from the <see cref="IList"/>.</param>
-        void IList.Remove(object value)
-        {
-            if (value is T item)
-            {
-                Remove(item);
-            }
-        }
     }
 }

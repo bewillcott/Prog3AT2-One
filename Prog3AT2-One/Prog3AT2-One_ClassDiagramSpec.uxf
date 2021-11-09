@@ -47,7 +47,7 @@ group=1</panel_attributes>
       <x>160</x>
       <y>264</y>
       <w>200</w>
-      <h>48</h>
+      <h>56</h>
     </coordinates>
     <panel_attributes>bg=green
 transparency=0
